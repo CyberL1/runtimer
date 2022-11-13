@@ -40,7 +40,7 @@ else
 fi
 
 echo "Runtimer was installed to $runtimer_exe"
-if command -v deno > /dev/null; then
+if command -v runtimer > /dev/null; then
   echo "Run 'runtimer --help' to get started"
 else
   case $SHELL in
