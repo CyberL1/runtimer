@@ -24,7 +24,7 @@ else
   esac
 fi
 
-download_url="https://github.com/CyberL1/go-build-test/releases/latest/download/runtimer-${target}.zip"
+download_url="https://github.com/CyberL1/runtimer/releases/latest/download/runtimer-${target}.zip"
 
 if [ ! -d $runtimer_dir ]; then
   mkdir -p $runtimer_dir

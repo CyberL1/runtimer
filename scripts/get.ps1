@@ -20,7 +20,7 @@ if ($Build) {
   go build -o $RuntimerExe
 } else {
   curl.exe -Lo $RuntimerZip $DownloadUrl
-  Expand-Archive -LiteralPath $RuntimerZip -DestinationPath $RuntimerPath
+  Expand-Archive -LiteralPath $RuntimerZip -DestinationPath $RuntimerPath -Force
   Remove-Item $RuntimerZip
 }
 
