@@ -1,0 +1,1 @@
+console.log(`Hello from ${Deno.execPath()} v${Deno.version.deno}`)

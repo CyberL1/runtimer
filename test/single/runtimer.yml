@@ -1,0 +1,11 @@
+runtimes:
+  - name: node.js
+    runtime: https://nodejs.org/dist/v$v/node-v$v-$o-$a.$e
+    version: 19.0.1
+    os:
+      windows:
+        name: win
+        ext: zip
+        bin: $d/node.exe
+    arch:
+      amd64: x64

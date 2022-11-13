@@ -33,7 +33,7 @@ func run(cmd *cobra.Command, args []string) {
 		if args[0] == "-r" {
 			chosen := utils.GetRuntimeByName(args[1])
 			runtime = config.Runtimes[chosen]
-			args = args[:2]
+			args = args[2:]
 		}
 	}
 

@@ -1,0 +1,24 @@
+# You can choose which runtime to run by using: runtimer run -r <runtime>
+
+primary: deno
+runtimes:
+  - name: node
+    runtime: nodejs
+    version: 19.0.1
+    os:
+      windows:
+        name: win
+        ext: zip
+        bin: $d/node.exe
+    arch:
+      amd64: x64
+  - name: deno
+    runtime: deno
+    version: 1.27.2
+    ext: zip
+    os:
+      windows:
+        name: pc-windows-msvc
+        bin: deno.exe
+    arch:
+      amd64: x86_64

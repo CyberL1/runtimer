@@ -1,0 +1,1 @@
+console.log(`Hello from ${process.execPath} ${process.version}`)
