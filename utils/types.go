@@ -1,27 +1,22 @@
 package utils
 
-type LocalConfig struct {
+type LocalConfigType struct {
 	Primary string
-	Runtimes []Runtime
+	Runtimes []RuntimeType
 }
 
-type Runtime struct {
+type RuntimeType struct {
 	Name string
 	Runtime string
 	Version string
 	Ext string
 	Bin string
-	Os map[string]Os
+	Os map[string]OsType
 	Arch map[string]string
 }
 
-type Os struct {
+type OsType struct {
 	Name string
 	Ext string
 	Bin string
-}
-
-type LatestRelease struct {
-	TagName string `json:"tag_name"`
-	PreRelease bool `json:"prerelease"`
 }

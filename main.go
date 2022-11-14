@@ -1,8 +1,6 @@
 package main
 
-import (
-	"runtimer/cmd"
-)
+import "runtimer/cmd"
 
 func main() {
 	cmd.Execute()

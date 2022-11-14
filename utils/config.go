@@ -7,20 +7,20 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func GetLocalConfig() (LocalConfig, error) {
+func GetLocalConfig() (LocalConfigType, error) {
 	file, err := os.ReadFile("runtimer.yml")
 	if err != nil {
-		return LocalConfig{}, errors.New("cannot find config file (runrimer.yml)")
+		return LocalConfigType{}, errors.New("cannot find config file (runtimer.yml)")
 	}
-	var config LocalConfig
+	var config LocalConfigType
 	err = yaml.Unmarshal(file, &config)
 	if err != nil {
-		return LocalConfig{}, err
+		return LocalConfigType{}, err
 	}
 	return config, err
 }
 
-func GetPrimaryRuntime(config LocalConfig) int {
+func GetPrimaryRuntime(config LocalConfigType) int {
 	for i, r := range config.Runtimes {
 		if r.Name == config.Primary {
 			return i

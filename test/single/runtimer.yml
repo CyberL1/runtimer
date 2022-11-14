@@ -6,6 +6,6 @@ runtimes:
       windows:
         name: win
         ext: zip
-        bin: $d/node.exe
+        bin: node-v$v-$o-$a/node.exe
     arch:
       amd64: x64
