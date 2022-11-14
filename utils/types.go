@@ -20,8 +20,3 @@ type Os struct {
 	Ext string
 	Bin string
 }
-
-type LatestRelease struct {
-	TagName string `json:"tag_name"`
-	PreRelease bool `json:"prerelease"`
-}
