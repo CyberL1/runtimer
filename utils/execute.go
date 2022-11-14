@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"os/signal"
 	"path/filepath"
 	"runtime"
 	"runtimer/cache"
@@ -71,17 +72,19 @@ func ExecuteRuntime(config RuntimeType, args []string) {
 
 	// Execute runtime
 	cmd := exec.Command(runtimeDir + string(os.PathSeparator) + filepath.FromSlash(replacer.Replace(o.Bin)), args...)
-	_, err = cmd.CombinedOutput()
-	if err != nil {
-		fmt.Println(cmd.Stderr)
-		// Delete runtime if not cached
-		if !cached[runtime.Name] {
-		os.RemoveAll(runtimeDir)
-		}
-		return
-	}
-	fmt.Print(cmd.Stdout)
+	cmd.Stdin = os.Stdin
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = os.Stdout
 
+	sig := make(chan os.Signal, 1)
+	signal.Notify(sig, os.Interrupt)
+	go func() {
+		<-sig
+		if !cached[runtime.Name] {
+			os.RemoveAll(runtimeDir)
+		}
+	}()
+		cmd.Run()
 	// Delete runtime if not cached
 	if !cached[runtime.Name] {
 		os.RemoveAll(runtimeDir)
