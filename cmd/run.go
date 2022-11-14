@@ -30,6 +30,11 @@ func run(cmd *cobra.Command, args []string) {
 		primary := utils.GetPrimaryRuntime(config)
 		runtime = config.Runtimes[primary]
 
+		if len(args) == 0 {
+			utils.ExecuteRuntime(runtime, args)
+			return
+		}
+
 		if args[0] == "-r" {
 			chosen := utils.GetRuntimeByName(args[1])
 			runtime = config.Runtimes[chosen]
