@@ -9,7 +9,7 @@ import (
 
 var runCmd = &cobra.Command{
 	Use: "run",
-	Short: "Run a runtime listed in config file",
+	Short: "Runs a runtime listed in config file",
 	Run: run,
 	DisableFlagParsing: true,
 }

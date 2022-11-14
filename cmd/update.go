@@ -10,7 +10,7 @@ import (
 
 var updateCmd = &cobra.Command{
 	Use: "update",
-	Short: "Update runtimer",
+	Short: "Updates runtimer",
 	Run: update,
 }
 
