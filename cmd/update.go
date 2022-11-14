@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"fmt"
+	"os"
 	"os/exec"
 	"runtime"
 
@@ -29,10 +29,8 @@ func update(cmd *cobra.Command, args []string) {
 		cmdArgs = []string{"irm https://raw.githubusercontent.com/CyberL1/runtimer/master/scripts/get.ps1 | iex"}
 	}
 	execCmd := exec.Command(command, cmdArgs...)
-	out, err := execCmd.CombinedOutput()
-	if err != nil {
-		fmt.Println(execCmd.Stderr)
-		return
-	}
-	fmt.Print(string(out))
+	execCmd.Stderr = os.Stderr
+	execCmd.Stdin = os.Stdin
+	execCmd.Stdout = os.Stdout
+	execCmd.Run()
 }
