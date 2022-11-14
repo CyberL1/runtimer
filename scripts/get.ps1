@@ -2,11 +2,10 @@
 
 $ErrorActionPreference = 'Stop'
 
-$Build = $false
-
 $RuntimerPath = "${Home}\.runtimer\bin"
 $RuntimerZip = "$RuntimerPath\runtimer.zip"
 $RuntimerExe = "$RuntimerPath\runtimer.exe"
+$RuntimerOldExe = "$env:Temp\runtimerold.exe"
 
 $Target = "windows-amd64"
 
@@ -16,13 +15,14 @@ if (!(Test-Path $RuntimerPath)) {
   New-Item $RuntimerPath -ItemType Directory | Out-Null
 }
 
-if ($Build) {
-  go build -o $RuntimerExe
-} else {
-  curl.exe -Lo $RuntimerZip $DownloadUrl
-  Expand-Archive -LiteralPath $RuntimerZip -DestinationPath $RuntimerPath -Force
-  Remove-Item $RuntimerZip
+curl.exe -Lo $RuntimerZip $DownloadUrl
+
+if (Test-Path $RuntimerExe) {
+  Move-Item -Path $RuntimerExe -Destination $RuntimerOldExe -Force
 }
+
+Expand-Archive -LiteralPath $RuntimerZip -DestinationPath $RuntimerPath -Force
+Remove-Item $RuntimerZip
 
 $User = [System.EnvironmentVariableTarget]::User
 $Path = [System.Environment]::GetEnvironmentVariable('Path', $User)
