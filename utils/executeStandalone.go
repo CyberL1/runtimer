@@ -15,21 +15,26 @@ import (
 	"github.com/mholt/archiver"
 )
 
-func ExecuteRuntime(config RuntimeType, args []string) {
+func ExecuteRuntimeStandalone(name string, args []string) {
+	run, err := constants.GetDefinedRuntime(name)
+	if err != nil {
+		fmt.Print(err)
+		return
+	}
 	// Get os configuration
-	o := config.Os[runtime.GOOS]
+	o := run.Os[runtime.GOOS]
 	if o.Name == "" {
 		o.Name = runtime.GOOS
 	}
 	if o.Ext == "" {
-		o.Ext = config.Ext
+		o.Ext = run.Ext
 	}
 	if o.Bin == "" {
-		o.Bin = config.Bin
+		o.Bin = run.Bin
 	}
 
 	// Get arch configuration
-	a := config.Arch[runtime.GOARCH]
+	a := run.Arch[runtime.GOARCH]
 	if a == "" {
 		a = runtime.GOARCH
 	}
@@ -41,24 +46,12 @@ func ExecuteRuntime(config RuntimeType, args []string) {
 		return
 	}
 
-	// Build runtime metadata
-	var runtime constants.RuntimesType
-	if strings.HasPrefix(config.Runtime, "https://") {
-		runtime.Url = config.Runtime
-	} else {
-		runtime, err = constants.GetDefinedRuntime(config.Runtime)
-		if err != nil {
-			fmt.Print(err)
-			return
-		}
-	}
-
-	replacer := strings.NewReplacer("$v", config.Version,
+	replacer := strings.NewReplacer("$v", run.Version,
 	"$o", o.Name,
 	"$a", a,
 	"$e", o.Ext)
 
-	finalUrl := replacer.Replace(runtime.Url)
+	finalUrl := replacer.Replace(run.Url)
 
 	// Get runtime
 	archive, err := grab.Get(constants.CacheDir, finalUrl)
@@ -68,8 +61,8 @@ func ExecuteRuntime(config RuntimeType, args []string) {
 	}
 
 	// Unarchive runtime
-	runtimeDir := filepath.Join(constants.CacheDir, runtime.Name)
-	archiver.Unarchive(archive.Filename, constants.CacheDir + string(os.PathSeparator) + runtime.Name)
+	runtimeDir := filepath.Join(constants.CacheDir, run.Name)
+	archiver.Unarchive(archive.Filename, constants.CacheDir + string(os.PathSeparator) + run.Name)
 
 	// Delete archive
 	os.Remove(archive.Filename)
@@ -84,13 +77,13 @@ func ExecuteRuntime(config RuntimeType, args []string) {
 	signal.Notify(sig, os.Interrupt)
 	go func() {
 		<-sig
-		if !cached[runtime.Name] {
+		if !cached[run.Name] {
 			os.RemoveAll(runtimeDir)
 		}
 	}()
-		cmd.Run()
+	cmd.Run()
 	// Delete runtime if not cached
-	if !cached[runtime.Name] {
+	if !cached[run.Name] {
 		os.RemoveAll(runtimeDir)
 	}
 }

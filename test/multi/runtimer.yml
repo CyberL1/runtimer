@@ -3,7 +3,7 @@
 primary: deno
 runtimes:
   - name: node
-    runtime: nodejs
+    runtime: node
     version: 19.0.1
     os:
       windows:
