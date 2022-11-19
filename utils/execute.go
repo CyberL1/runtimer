@@ -53,7 +53,7 @@ func ExecuteRuntime(config RuntimeType, args []string) {
 		}
 	}
 
-	replacer := strings.NewReplacer("$v", config.Version,
+	replacer := strings.NewReplacer("$v", runtime.Version,
 	"$o", o.Name,
 	"$a", a,
 	"$e", o.Ext)

@@ -14,7 +14,6 @@ runtimes:
       amd64: x64
   - name: deno
     runtime: deno
-    version: 1.27.2
     ext: zip
     os:
       windows:
