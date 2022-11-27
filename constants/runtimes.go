@@ -11,19 +11,19 @@ var Runtimes = []RuntimesType{
 			"windows": {
 				Name: "win",
 				Ext: "zip",
-				Bin: "node-v$v-$o-$a/node.exe",
+				Bin: "/node-v$v-$o-$a/node.exe",
 			},
 		},
 		Arch: map[string]string{
-			"amd64": "x64", 
-			},
+			"amd64": "x64",
 		},
+	},
 	{
 		Name: "deno",
 		Url: "https://github.com/denoland/deno/releases/$v/download/deno-$a-$o.$e",
 		Version: "latest",
 		Ext: "zip",
-		Bin: "deno",
+		Bin: "/deno",
 		Os: map[string]OsType{
 			"windows": {
 				Name: "pc-windows-msvc",

@@ -68,7 +68,7 @@ func ExecuteRuntimeStandalone(name string, args []string) {
 	os.Remove(archive.Filename)
 
 	// Execute runtime
-	cmd := exec.Command(runtimeDir + string(os.PathSeparator) + filepath.FromSlash(replacer.Replace(o.Bin)), args...)
+	cmd := exec.Command(fixPath(replacer.Replace(o.Bin), runtimeDir), args...)
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout

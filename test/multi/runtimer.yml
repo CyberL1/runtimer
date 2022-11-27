@@ -9,7 +9,7 @@ runtimes:
       windows:
         name: win
         ext: zip
-        bin: node-v$v-$o-$a/node.exe
+        bin: /node-v$v-$o-$a/node.exe
     arch:
       amd64: x64
   - name: deno
@@ -18,6 +18,6 @@ runtimes:
     os:
       windows:
         name: pc-windows-msvc
-        bin: deno.exe
+        bin: /deno.exe
     arch:
       amd64: x86_64
