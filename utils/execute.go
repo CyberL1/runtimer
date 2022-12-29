@@ -15,7 +15,7 @@ import (
 	"github.com/mholt/archiver"
 )
 
-func ExecuteRuntime(config RuntimeType, args []string) {
+func ExecuteRuntime(name string, args []string) {
 	// Get cache
 	cached, err := cache.Get()
 	if err != nil {
@@ -25,10 +25,10 @@ func ExecuteRuntime(config RuntimeType, args []string) {
 
 	// Build runtime metadata
 	var run constants.RuntimesType
-	if strings.HasPrefix(config.Runtime, "https://") {
-		run.Url = config.Runtime
+	if strings.HasPrefix(name, "https://") {
+		run.Url = name
 	} else {
-		run, err = constants.GetDefinedRuntime(config.Runtime)
+		run, err = constants.GetDefinedRuntime(name)
 		if err != nil {
 			fmt.Print(err)
 			return
@@ -88,7 +88,7 @@ func ExecuteRuntime(config RuntimeType, args []string) {
 			os.RemoveAll(runtimeDir)
 		}
 	}()
-		cmd.Run()
+	cmd.Run()
 	// Delete runtime if not cached
 	if !cached[run.Name] {
 		os.RemoveAll(runtimeDir)

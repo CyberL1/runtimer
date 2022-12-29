@@ -25,5 +25,5 @@ func execCli(cmd *cobra.Command, args []string) {
 	}
 	runtime := args[0]
 	args = args[1:]
-	utils.ExecuteRuntimeStandalone(runtime, args)
+	utils.ExecuteRuntime(runtime, args)
 }
