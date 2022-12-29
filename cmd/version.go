@@ -1,21 +1,39 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"runtime"
+	"runtimer/constants"
 
 	"github.com/spf13/cobra"
 )
 
+var versionCmd = &cobra.Command{
+	Use: "version",
+	Short: "Displays your CLI version",
+	Run: version,
+}
 var updateCmd = &cobra.Command{
 	Use: "update",
-	Short: "Updates runtimer",
+	Short: "Updates your CLI version",
 	Run: update,
 }
 
 func init() {
-	rootCmd.AddCommand(updateCmd)
+	rootCmd.AddCommand(versionCmd)
+	versionCmd.AddCommand(updateCmd)
+}
+
+func version(cmd *cobra.Command, args []string) {
+	latestRelease, _ := constants.GetLatestCliVersion()
+	if constants.Version < latestRelease.TagName {
+		fmt.Println("A new update is avaliable")
+		fmt.Println("Run 'runtimer version update' to update now")
+	}
+	fmt.Println("Your CLI Version:", constants.Version)
+	fmt.Println("Latest CLI version:", latestRelease.TagName)
 }
 
 func update(cmd *cobra.Command, args []string) {

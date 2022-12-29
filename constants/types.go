@@ -15,3 +15,8 @@ type OsType struct {
 	Ext string
 	Bin string
 }
+
+type GithubRelease struct {
+	TagName string `json:"tag_name"`
+	Prerelease bool
+}

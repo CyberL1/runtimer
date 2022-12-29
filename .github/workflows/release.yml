@@ -37,7 +37,7 @@ jobs:
         run: |
           export GOOS=${{ matrix.os }}
           export GOARCH=${{ matrix.arch }}
-          go build
+          go build -ldflags "-X runtimer/constants.Version=${{ needs.create-tag.outputs.new_tag }}"
       - name: Pack binary
         run: zip runtimer-${{ matrix.os }}-${{ matrix.arch }}.zip runtimer${{ matrix.os == 'windows' && '.exe' || '' }}
       - name: Create release
