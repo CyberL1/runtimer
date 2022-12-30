@@ -2,7 +2,7 @@ package constants
 
 import "fmt"
 
-var Runtimes = []RuntimesType{
+var Runtimes = []*RuntimesType{
 	{
 		Name: "node",
 		Url: "https://nodejs.org/dist/v$v/node-v$v-$o-$a.$e",
@@ -37,11 +37,11 @@ var Runtimes = []RuntimesType{
 	},
 }
 
-func GetDefinedRuntime(name string) (RuntimesType, error) {
+func GetDefinedRuntime(name string) (*RuntimesType, error) {
 	for i, r := range Runtimes {
 		if r.Name == name {
 			return Runtimes[i], nil
 		}
 	}
-	return Runtimes[0], fmt.Errorf("cannot find runtime %s", name)
+	return nil, fmt.Errorf("cannot find runtime %s", name)
 }

@@ -25,22 +25,29 @@ func run(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	runtime := config.Runtimes[0].Runtime
+	runtime := &config.Runtimes[0]
+	multiple := false
 	if len(config.Runtimes) > 1 {
-		primary := utils.GetPrimaryRuntime(config)
-		runtime = config.Runtimes[primary].Runtime
+		multiple = true
+		runtime, err := utils.GetPrimaryRuntime(config)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 
 		if len(args) == 0 {
-			utils.ExecuteRuntime(runtime, args)
+			utils.ExecuteRuntime(runtime, false, multiple, args)
 			return
 		}
 
 		if args[0] == "-r" {
-			chosen := utils.GetRuntimeByName(args[1])
-			runtime = config.Runtimes[chosen].Runtime
-			args = args[2:]
+			runtime, err = utils.GetCustomRuntimeByName(args[1])
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
 		}
 	}
 
-	utils.ExecuteRuntime(runtime, args)
+	utils.ExecuteRuntime(runtime, false, multiple, args)
 }

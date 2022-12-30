@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"runtimer/constants"
 	"runtimer/utils"
 
 	"github.com/spf13/cobra"
@@ -23,7 +24,6 @@ func execCli(cmd *cobra.Command, args []string) {
 		fmt.Print("Provide a runtime")
 		return
 	}
-	runtime := args[0]
-	args = args[1:]
-	utils.ExecuteRuntime(runtime, args)
+	run, _ := constants.GetDefinedRuntime(args[0])
+	utils.ExecuteRuntime(run, true, false, args)
 }

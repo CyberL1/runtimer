@@ -15,12 +15,25 @@ import (
 	"github.com/mholt/archiver"
 )
 
-func ExecuteRuntime(name string, args []string) {
+func ExecuteRuntime(run *constants.RuntimesType, standalone bool, multiple bool, args []string) {
 	// Get cache
 	cached := cache.Get()
 
+	// Check for custom version
+	if standalone {
+		if strings.Contains(args[0], "@") {
+			nameVer := strings.Split(args[0], "@")
+			run, _ = constants.GetDefinedRuntime(nameVer[0])
+			run.Version = nameVer[1]
+			args = args[1:]
+		}
+	}
+
 	// Get runtime metadata
-	run, err := constants.GetDefinedRuntime(name)
+	var err error
+	if run.Url == "" {
+		run, err = constants.GetDefinedRuntime(run.Runtime)
+	}
 	if err != nil {
 		fmt.Print(err)
 		return
@@ -42,6 +55,18 @@ func ExecuteRuntime(name string, args []string) {
 	a := run.Arch[runtime.GOARCH]
 	if a == "" {
 		a = runtime.GOARCH
+	}
+
+	if !standalone {
+		// Get custom
+		_, err = GetLocalConfig()
+		if err == nil && multiple && args[0] == "-r" {
+			custom, _ := GetCustomRuntimeByName(args[1])
+			args = args[2:]
+			if custom.Version != "" {
+				run.Version = custom.Version
+			}
+		}
 	}
 
 	replacer := strings.NewReplacer("$v", run.Version,

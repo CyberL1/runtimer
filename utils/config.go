@@ -2,7 +2,9 @@ package utils
 
 import (
 	"errors"
+	"fmt"
 	"os"
+	"runtimer/constants"
 
 	"gopkg.in/yaml.v2"
 )
@@ -20,22 +22,21 @@ func GetLocalConfig() (LocalConfigType, error) {
 	return config, err
 }
 
-func GetPrimaryRuntime(config LocalConfigType) int {
+func GetPrimaryRuntime(config LocalConfigType) (*constants.RuntimesType, error) {
 	for i, r := range config.Runtimes {
 		if r.Name == config.Primary {
-			return i
+			return &config.Runtimes[i], nil
 		}
 	}
-	return 0
+	return nil, fmt.Errorf("cannot find runtime %s", config)
 }
 
-func GetRuntimeByName(name string) int {
+func GetCustomRuntimeByName(name string) (*constants.RuntimesType, error) {
 	config, _ := GetLocalConfig()
 	for i, r := range config.Runtimes {
 		if r.Name == name {
-			return i
+			return &config.Runtimes[i], nil
 		}
 	}
-	fallback := GetPrimaryRuntime(config)
-	return fallback
+	return nil, fmt.Errorf("cannot find runtime %s", name)
 }

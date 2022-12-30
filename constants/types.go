@@ -3,6 +3,7 @@ package constants
 type RuntimesType struct {
 	Name string
 	Url string
+	Runtime string
 	Version string
 	Ext string
 	Bin string
