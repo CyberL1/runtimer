@@ -17,11 +17,7 @@ import (
 
 func ExecuteRuntime(name string, args []string) {
 	// Get cache
-	cached, err := cache.Get()
-	if err != nil {
-		fmt.Print(err)
-		return
-	}
+	cached := cache.Get()
 
 	// Build runtime metadata
 	var run constants.RuntimesType

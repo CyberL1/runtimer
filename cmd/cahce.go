@@ -19,11 +19,8 @@ func init() {
 }
 
 func cacheCli(cmd *cobra.Command, args []string) {
-	cached, err := cache.Get()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	cached := cache.Get()
+
 	if len(args) == 0 {
 		if len(cached) == 0 {
 			fmt.Print("Nothing is cached")
