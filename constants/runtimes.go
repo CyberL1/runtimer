@@ -7,6 +7,8 @@ var Runtimes = []RuntimesType{
 		Name: "node",
 		Url: "https://nodejs.org/dist/v$v/node-v$v-$o-$a.$e",
 		Version: "19.1.0",
+		Ext: "tar.xz",
+		Bin: "/node-v$v-$o-$a/bin/node",
 		Os: map[string]OsType{
 			"windows": {
 				Name: "win",

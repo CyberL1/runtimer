@@ -21,5 +21,5 @@ func Get() (map[string]bool, error) {
 		}
 	}
 	err = json.Unmarshal(file, &cache)
-	return cache, err
+	return cache, nil
 }
