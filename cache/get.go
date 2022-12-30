@@ -6,7 +6,7 @@ import (
 	"runtimer/constants"
 )
 
-func Get() (map[string]bool, error) {
+func Get() map[string]bool {
 	file, err := os.ReadFile(constants.CachedFile)
 	cache := make(map[string]bool)
 	if err != nil {
@@ -21,5 +21,5 @@ func Get() (map[string]bool, error) {
 		}
 	}
 	err = json.Unmarshal(file, &cache)
-	return cache, nil
+	return cache
 }
