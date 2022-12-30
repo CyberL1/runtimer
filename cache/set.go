@@ -7,7 +7,7 @@ import (
 )
 
 func Set(runtime string, cached bool) {
-	cache, _ := Get()
+	cache := Get()
 	cache[runtime] = cached
 	newCache, _ := json.MarshalIndent(cache, "", "\t")
 	os.WriteFile(constants.CachedFile, newCache, os.FileMode(0644))
