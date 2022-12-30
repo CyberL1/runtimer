@@ -19,16 +19,11 @@ func ExecuteRuntime(name string, args []string) {
 	// Get cache
 	cached := cache.Get()
 
-	// Build runtime metadata
-	var run constants.RuntimesType
-	if strings.HasPrefix(name, "https://") {
-		run.Url = name
-	} else {
-		run, err = constants.GetDefinedRuntime(name)
-		if err != nil {
-			fmt.Print(err)
-			return
-		}
+	// Get runtime metadata
+	run, err := constants.GetDefinedRuntime(name)
+	if err != nil {
+		fmt.Print(err)
+		return
 	}
 
 	// Get os configuration
