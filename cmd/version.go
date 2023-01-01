@@ -41,7 +41,8 @@ func update(cmd *cobra.Command, args []string) {
 	var cmdArgs []string
 	switch runtime.GOOS {
 	case "linux", "darwin":
-		command = "curl -fsSL https://raw.githubusercontent.com/CyberL1/runtimer/master/scripts/get.sh | sh"
+		command = "sh"
+		cmdArgs = []string{"-c", "curl -fsSL https://raw.githubusercontent.com/CyberL1/runtimer/master/scripts/get.sh | sh"}
 	case "windows":
 		command = "powershell"
 		cmdArgs = []string{"irm https://raw.githubusercontent.com/CyberL1/runtimer/master/scripts/get.ps1 | iex"}
