@@ -2,12 +2,13 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"os"
 	"os/exec"
 	"runtime"
 	"runtimer/constants"
 	"runtimer/utils"
+
+	"github.com/spf13/cobra"
 )
 
 var versionCmd = &cobra.Command{
