@@ -1,7 +1,9 @@
 name: Release
 permissions: write-all
-on: push
-
+on:
+  push:
+    paths:
+      - "src/**"
 jobs:
   create-tag:
     name: Create tag
@@ -20,7 +22,7 @@ jobs:
     defaults:
       run:
         working-directory: src
-    needs: Create-Tag
+    needs: create-tag
     strategy:
       matrix:
         os:
