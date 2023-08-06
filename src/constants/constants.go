@@ -12,3 +12,7 @@ var (
 	CacheFile   = filepath.Join(RuntimesDir, "cache.json")
 	Version     string
 )
+
+var (
+	GithubReleaseUrl = "https://api.github.com/repos/CyberL1/runtimer/releases/latest"
+)
