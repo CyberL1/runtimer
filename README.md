@@ -12,3 +12,15 @@ Linux:
 ```
 curl -fsSL https://raw.githubusercontent.com/CyberL1/runtimer/main/scripts/get.sh | sh
 ```
+
+# Development
+
+1. Start a local dev server:
+```
+runtimer dev
+```
+
+2. Change runtimes URL to localhost:
+```
+go run -ldflags "-X runtimer/constants.GithubRuntimesUrl=http://localhost:4786" main.go
+```
