@@ -14,5 +14,6 @@ var (
 )
 
 var (
-	GithubReleaseUrl = "https://api.github.com/repos/CyberL1/runtimer/releases/latest"
+	GithubReleaseUrl  = "https://api.github.com/repos/CyberL1/runtimer/releases/latest"
+	GithubRuntimesUrl = "https://api.github.com/repos/CyberL1/runtimer-test/contents/runtimes"
 )
