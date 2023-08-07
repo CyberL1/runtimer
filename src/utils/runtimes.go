@@ -68,18 +68,32 @@ func (files GithubFiles) Execute(args []string) {
 	runtimeName := strings.Split(files[0].Path, "/")[1]
 	runtimeDir := filepath.Join(constants.RuntimesDir, runtimeName)
 	var command string
+	var ext string
 
-	for _, f := range files {
-		grab.Get(filepath.Join(runtimeDir, f.Name), f.DownloadUrl)
+	switch runtime.GOOS {
+	case "linux", "darwin":
+		command = "sh"
+		ext = "sh"
+	case "windows":
+		command = "powershell"
+		ext = "ps1"
+	}
+
+	_, err := os.Stat(runtimeDir)
+	if IsCached(runtimeName) && err == nil {
+		cmd := exec.Command(command, filepath.Join(runtimeDir, fmt.Sprintf("run.%v", ext)+" "+strings.Join(args, " ")))
+		cmd.Dir = runtimeDir
+		cmd.Stdin = os.Stdin
+		cmd.Stderr = os.Stderr
+		cmd.Stdout = os.Stdout
+
+		cmd.Run()
+
+		return
 	}
 
 	for _, f := range files {
-		switch runtime.GOOS {
-		case "linux", "darwin":
-			command = "sh"
-		case "windows":
-			command = "powershell"
-		}
+		grab.Get(filepath.Join(runtimeDir, f.Name), f.DownloadUrl)
 
 		cmd := exec.Command(command, filepath.Join(runtimeDir, f.Name))
 		cmd.Dir = runtimeDir
@@ -94,5 +108,7 @@ func (files GithubFiles) Execute(args []string) {
 		cmd.Run()
 	}
 
-	os.RemoveAll(runtimeDir)
+	if !IsCached(runtimeName) {
+		os.RemoveAll(runtimeDir)
+	}
 }
