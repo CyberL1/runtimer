@@ -31,22 +31,22 @@ func dev(cmd *cobra.Command, args []string) {
 	fmt.Printf("Starting dev server on http://%v:%v\n", host, port)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		dir, _ := os.ReadDir("./runtimes" + r.URL.Path)
+		dir, _ := os.ReadDir("." + r.URL.Path)
 
 		var files []utils.GithubFile
 
-		stat, _ := os.Stat("./runtimes" + r.URL.Path)
+		stat, _ := os.Stat("." + r.URL.Path)
 		if stat.IsDir() {
 			w.Header().Set("Content-Type", "application/json")
 		} else {
-			content, _ := os.ReadFile("./runtimes" + r.URL.Path)
+			content, _ := os.ReadFile("." + r.URL.Path)
 			fmt.Fprint(w, string(content))
 			return
 		}
 
 		for _, f := range dir {
 			info, _ := f.Info()
-			path := strings.Join(strings.Split("runtimes"+r.URL.JoinPath(info.Name()).String(), "/"), "/")
+			path := strings.Join(strings.Split(r.URL.JoinPath(info.Name()).String(), "/")[1:], "/")
 			var downloadUrl string
 
 			if info.IsDir() {
