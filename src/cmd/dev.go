@@ -46,7 +46,7 @@ func dev(cmd *cobra.Command, args []string) {
 
 		for _, f := range dir {
 			info, _ := f.Info()
-			path := strings.Join(strings.Split(r.URL.JoinPath(info.Name()).String(), "/")[1:], "/")
+			path := strings.Join(strings.Split("runtimes"+r.URL.JoinPath(info.Name()).String(), "/"), "/")
 			var downloadUrl string
 
 			if info.IsDir() {
