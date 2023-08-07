@@ -22,5 +22,5 @@ runtimer dev
 
 2. Change runtimes URL to localhost:
 ```
-go run -ldflags "-X runtimer/constants.GithubRuntimesUrl=http://localhost:4786" main.go
+go run -ldflags "-X runtimer/constants.GithubRuntimesUrl=http://localhost:4786/runtimes" main.go
 ```
