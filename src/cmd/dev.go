@@ -31,11 +31,18 @@ func dev(cmd *cobra.Command, args []string) {
 	fmt.Printf("Starting dev server on http://%v:%v\n", host, port)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		stat, err := os.Stat("." + r.URL.Path)
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusNotFound)
+			w.Write([]byte(`{ "message": "Not Found" }`))
+			return
+		}
+
 		dir, _ := os.ReadDir("." + r.URL.Path)
 
 		var files []utils.GithubFile
 
-		stat, _ := os.Stat("." + r.URL.Path)
 		if stat.IsDir() {
 			w.Header().Set("Content-Type", "application/json")
 		} else {
