@@ -94,7 +94,9 @@ func (files GithubFiles) Execute(args []string) {
 
 	for _, f := range files {
 		grab.Get(filepath.Join(runtimeDir, f.Name), f.DownloadUrl)
+	}
 
+	for _, f := range files {
 		cmd := exec.Command(command, filepath.Join(runtimeDir, f.Name))
 		cmd.Dir = runtimeDir
 		cmd.Stdin = os.Stdin
