@@ -27,6 +27,12 @@ func cache(cmd *cobra.Command, args []string) {
 			return
 		}
 
+		_, err := utils.GetRuntime(args[0])
+		if err != nil {
+			fmt.Printf("runtime %v not found", args[0])
+			return
+		}
+
 		for _, r := range cache {
 			fmt.Println(r)
 		}

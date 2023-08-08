@@ -15,9 +15,7 @@ import (
 	"github.com/cavaliergopher/grab/v3"
 )
 
-type GithubFiles []GithubFile
-
-func GetRuntimes() (GithubFiles, error) {
+func GetRuntimes() ([]GithubFile, error) {
 	resp, _ := http.Get(constants.GithubRuntimesUrl)
 
 	body, err := io.ReadAll(resp.Body)
@@ -25,7 +23,7 @@ func GetRuntimes() (GithubFiles, error) {
 		return nil, err
 	}
 
-	var runtimes GithubFiles
+	var runtimes []GithubFile
 	err = json.Unmarshal(body, &runtimes)
 	if err != nil {
 		return nil, err
@@ -34,7 +32,7 @@ func GetRuntimes() (GithubFiles, error) {
 	return runtimes, nil
 }
 
-func GetRuntime(name string) (GithubFiles, error) {
+func GetRuntime(name string) (*Runtime, error) {
 	var dir string
 
 	switch runtime.GOOS {
@@ -55,20 +53,31 @@ func GetRuntime(name string) (GithubFiles, error) {
 		return nil, err
 	}
 
-	var files GithubFiles
+	runtimeDir := filepath.Join(constants.RuntimesDir, name)
+	var files []GithubFile
 	err = json.Unmarshal(body, &files)
 	if err != nil {
 		return nil, err
 	}
 
-	return files, nil
+	runtime := &Runtime{
+		Name:      name,
+		Directory: runtimeDir,
+		Files:     files,
+	}
+	return runtime, nil
 }
 
-func (files GithubFiles) Execute(args []string) {
-	runtimeName := strings.Split(files[0].Path, "/")[1]
-	runtimeDir := filepath.Join(constants.RuntimesDir, runtimeName)
+func (r Runtime) Download() {
+	for _, f := range r.Files {
+		grab.Get(filepath.Join(r.Directory, f.Name), f.DownloadUrl)
+	}
+}
+
+func (r Runtime) Execute(args []string) {
 	var command string
 	var ext string
+	var script string
 
 	switch runtime.GOOS {
 	case "linux", "darwin":
@@ -79,38 +88,38 @@ func (files GithubFiles) Execute(args []string) {
 		ext = "ps1"
 	}
 
-	_, err := os.Stat(runtimeDir)
-	if IsCached(runtimeName) && err == nil {
-		cmd := exec.Command(command, filepath.Join(runtimeDir, fmt.Sprintf("run.%v", ext)+" "+strings.Join(args, " ")))
-		cmd.Dir = runtimeDir
-		cmd.Stdin = os.Stdin
-		cmd.Stderr = os.Stderr
-		cmd.Stdout = os.Stdout
+	if !IsCached(r.Name) {
+		r.Download()
 
-		cmd.Run()
+		for _, f := range r.Files {
+			cmd := exec.Command(command, filepath.Join(r.Directory, f.Name))
+			cmd.Dir = r.Directory
+			cmd.Stdin = os.Stdin
+			cmd.Stderr = os.Stderr
+			cmd.Stdout = os.Stdout
 
-		return
-	}
-
-	for _, f := range files {
-		grab.Get(filepath.Join(runtimeDir, f.Name), f.DownloadUrl)
-	}
-
-	for _, f := range files {
-		cmd := exec.Command(command, filepath.Join(runtimeDir, f.Name))
-		cmd.Dir = runtimeDir
-		cmd.Stdin = os.Stdin
-		cmd.Stderr = os.Stderr
-		cmd.Stdout = os.Stdout
-
-		if strings.Split(f.Name, ".")[0] == "run" {
-			cmd.Args = append(cmd.Args, args...)
+			if strings.Split(f.Name, ".")[0] == "run" {
+				if args != nil {
+					cmd.Args = append(cmd.Args, args...)
+				} else {
+					continue
+				}
+			}
+			cmd.Run()
+			os.RemoveAll(r.Directory)
+		}
+	} else {
+		if args != nil {
+			script = "run"
+		} else {
+			script = "build"
 		}
 
+		cmd := exec.Command(command, filepath.Join(r.Directory, fmt.Sprintf("%v.%v", script, ext))+" "+strings.Join(args, " "))
+		cmd.Dir = r.Directory
+		cmd.Stdin = os.Stdin
+		cmd.Stderr = os.Stderr
+		cmd.Stdout = os.Stdout
 		cmd.Run()
-	}
-
-	if !IsCached(runtimeName) {
-		os.RemoveAll(runtimeDir)
 	}
 }

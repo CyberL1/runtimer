@@ -5,6 +5,12 @@ type GithubRelease struct {
 	Prerelease bool
 }
 
+type Runtime struct {
+	Name string `json:"name"`
+	Directory string `json:"directory"`
+	Files []GithubFile
+}
+
 type GithubFile struct {
 	Name        string `json:"name"`
 	Path        string `json:"path"`
