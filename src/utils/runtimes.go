@@ -106,8 +106,8 @@ func (r Runtime) Execute(args []string) {
 				}
 			}
 			cmd.Run()
-			os.RemoveAll(r.Directory)
 		}
+		os.RemoveAll(r.Directory)
 	} else {
 		if args != nil {
 			script = "run"
