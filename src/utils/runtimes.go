@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"os/signal"
 	"path/filepath"
 	"runtime"
 	"runtimer/constants"
@@ -78,6 +79,7 @@ func (r Runtime) Execute(args []string) {
 	var command string
 	var ext string
 	var script string
+	var interrupted bool
 
 	switch runtime.GOOS {
 	case "linux", "darwin":
@@ -89,23 +91,35 @@ func (r Runtime) Execute(args []string) {
 	}
 
 	if !IsCached(r.Name) {
-		r.Download()
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, os.Interrupt)
+		go func() {
+			<-c
+			interrupted = true
+		}()
 
-		for _, f := range r.Files {
-			cmd := exec.Command(command, filepath.Join(r.Directory, f.Name))
-			cmd.Dir = r.Directory
-			cmd.Stdin = os.Stdin
-			cmd.Stderr = os.Stderr
-			cmd.Stdout = os.Stdout
-
-			if strings.Split(f.Name, ".")[0] == "run" {
-				if args != nil {
-					cmd.Args = append(cmd.Args, args...)
-				} else {
-					continue
+		if !interrupted {
+			r.Download()
+			for _, f := range r.Files {
+				if interrupted {
+					break
 				}
+
+				cmd := exec.Command(command, filepath.Join(r.Directory, f.Name))
+				cmd.Dir = r.Directory
+				cmd.Stdin = os.Stdin
+				cmd.Stderr = os.Stderr
+				cmd.Stdout = os.Stdout
+
+				if strings.Split(f.Name, ".")[0] == "run" {
+					if args != nil {
+						cmd.Args = append(cmd.Args, args...)
+					} else {
+						continue
+					}
+				}
+				cmd.Run()
 			}
-			cmd.Run()
 		}
 		os.RemoveAll(r.Directory)
 	} else {
