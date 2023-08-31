@@ -43,8 +43,10 @@ func SetCache(name string, remove bool) {
 
 	newCache, _ := json.MarshalIndent(cache, "", "\t")
 	os.WriteFile(constants.CacheFile, newCache, 0644)
-	
+
 	// Execute runtime build script
-	r, _ := GetRuntime(name)
-	r.Execute(nil)
+	if !remove {
+		r, _ := GetRuntime(name)
+		r.Execute(nil)
+	}
 }
